@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>routes\Operations.js - BC-Project</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="BC-Project"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.1</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Operations.html">Operations</a></li>
+            
+                <li><a href="../classes/Server.html">Server</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: routes\Operations.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* Description: This class contains all the methods used by the server class.
+*
+* @class Operations
+*/
+
+var mongoose = require(&#x27;mongoose&#x27;);
+ 
+// database
+mongoose.connect(&#x27;mongodb://localhost/configdb&#x27;);
+ 
+var Schema = mongoose.Schema;
+ 
+// Schemas
+
+var configComp = mongoose.Schema();
+configComp.add(
+	{ _id:false,
+	  commerceItemType: &#x27;string&#x27;,
+	  buildCategoryId: &#x27;string&#x27;,
+	  skuId: &#x27;string&#x27;,
+	  quantity: &#x27;Number&#x27;,
+	  productId: &#x27;string&#x27;,
+	  components: [configComp]
+	});
+
+var configMain = mongoose.Schema(
+	    { items: [{
+	    	  _id:false,
+	          commerceItemType: &#x27;string&#x27;,
+	          skuId: &#x27;string&#x27;,
+	          quantity: &#x27;Number&#x27;,
+	          productId: &#x27;string&#x27;,
+	          components: [configComp]
+	      }],
+	      buildTypeId: &#x27;string&#x27;,
+	      type: &#x27;string&#x27;,
+	      buildGroupId: &#x27;string&#x27;
+	    }, {versionKey: false});
+ 
+var configuration = mongoose.model(&#x27;configurations&#x27;, configMain);
+ 
+
+/**
+* Description: Adds a configuration given inside the request object.
+*
+* @method addConfig
+* @param {Object} req A request object.
+* @param {Object} res A response object.
+* @return {Object} Returns a HTTP response with the saved configuration.
+*/
+exports.addConfig = function(req, res) {
+	var config = new configuration(req.body);
+	console.log(&quot;Validating config. data...&quot;);
+	if((config.items.length == 0) || !config.buildTypeId || !config.type || !config.buildGroupId){
+    	console.log(&#x27;Error in config. keys. \n&#x27;);
+    	res.send(&#x27;Syntax error&#x27;, 400);
+    } else {
+    	if(!config.items[0].commerceItemType || !config.items[0].skuId || 
+    	    	   !config.items[0].quantity || !config.items[0].productId){
+        	console.log(&#x27;Error in main component. \n&#x27;);
+        	res.send(&#x27;Syntax error&#x27;, 400);
+    	 } else {
+    		var components = config.items[0].components;
+ 			var flag = true;
+ 			for (var i = 0; i&lt;components.length; i++){
+ 				flag = checkSyntax(components[i]);
+ 				if (flag){ continue; }
+ 				else { break; }
+ 			}
+ 			if (flag){
+ 				config.save(function(err, result){
+ 					if (err) {
+ 			        	console.log(err);
+ 			            res.send(&#x27;An error has occurred \n&#x27;, 409);
+ 			        } else {
+ 			            console.log(&#x27;Success... \n&#x27;);
+ 			            res.send(result, 200);
+ 			        }
+ 				});
+ 			} else {
+				console.log(&#x27;Error in component. \n&#x27;);
+	        	res.send(&#x27;Syntax error \n&#x27;, 400);
+			}
+    	 }
+    }
+};
+
+/**
+* Description: Finds a configuration based on an ID inside the 
+* request object.
+*
+* @method findById
+* @param {Object} req A request object.
+* @param {Object} res A response object.
+* @return {Object} Returns a HTTP response with the wanted configuration.
+*/
+exports.findById = function(req, res) {
+	configuration.findById(req.params.id, function (err, item) {
+		if (!(item == null)){
+    		console.log(&#x27;Success... \n&#x27;);
+    		res.send(item, 200);
+    	} else {
+    		res.send(404);
+    	}
+	});
+};
+
+/**
+* Description: Find all the configurations saved.
+*
+* @method findAll
+* @param {Object} req A request object.
+* @param {Object} res A response object.
+* @return {Object} Returns a HTTP response with all the saved configuration
+* in the data base.
+*/
+exports.findAll = function(req, res) {
+	configuration.find(function (err, items) {
+	    if (!err) {
+	    	console.log(&#x27;Success... \n&#x27;);
+            res.send(items, 200);
+	    } else {
+	    	res.send(404);
+	    }
+	});
+};
+
+/**
+* Description: Update a configuration based on the ID inside the
+* request object.
+*
+* @method updateConfig
+* @param {Object} req A request object.
+* @param {Object} res A response object.
+* @return {Object} Returns a HTTP response with the updated configuration.
+*/
+exports.updateConfig = function(req, res) {
+	configuration.findById(req.params.id, function (err, item) {
+		item.items = req.body.items;
+		item.buildTypeId = req.body.buildTypeId;
+		item.type = req.body.type;
+		item.buildGroupId = req.body.buildGroupId;
+		item.save(function(err, c){
+			if (!(c == null)){
+	    		console.log(&#x27;Success... \n&#x27;);
+	    		res.send(c, 200);
+	    	} else {
+	    		res.send(404);
+	    	}
+		});
+	});
+};
+
+/**
+* Description: Check syntax in the component object given.
+*
+* @method checkSyntax
+* @param {Object} component A component object.
+* @return {Boolean} Returns true if no error were found.
+*/
+function checkSyntax(component){
+	if (!component.commerceItemType || !component.buildCategoryId || !component.skuId || 
+			!component.quantity || !component.productId){
+		return false;
+	} else {
+		var flag = true;
+		for (var i = 0; i&lt;component.components.length; i++){
+			flag = checkSyntax(component.components[i]);
+			if (flag){ continue; }
+			else { break; }
+		}
+		if (flag){ return true; }
+		else { return false; }
+	}
+}
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

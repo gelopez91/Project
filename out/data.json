@@ -1,0 +1,244 @@
+{
+    "project": {
+        "name": "BC-Project",
+        "description": "REST services to save, update and find configurations.",
+        "version": "0.1",
+        "port": 3000
+    },
+    "files": {
+        "routes\\Operations.js": {
+            "name": "routes\\Operations.js",
+            "modules": {},
+            "classes": {
+                "Operations": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "Server.js": {
+            "name": "Server.js",
+            "modules": {},
+            "classes": {
+                "Server": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "Operations": {
+            "name": "Operations",
+            "shortname": "Operations",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "routes\\Operations.js",
+            "line": 1,
+            "description": "Description: This class contains all the methods used by the server class."
+        },
+        "Server": {
+            "name": "Server",
+            "shortname": "Server",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "Server.js",
+            "line": 1,
+            "description": "Description: This class receives the HTTP requests to operations like save, \nupdate and find configurations."
+        }
+    },
+    "classitems": [
+        {
+            "file": "routes\\Operations.js",
+            "line": 44,
+            "description": "Description: Adds a configuration given inside the request object.",
+            "itemtype": "method",
+            "name": "addConfig",
+            "params": [
+                {
+                    "name": "req",
+                    "description": "A request object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "res",
+                    "description": "A response object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Returns a HTTP response with the saved configuration.",
+                "type": "Object"
+            },
+            "class": "Operations"
+        },
+        {
+            "file": "routes\\Operations.js",
+            "line": 89,
+            "description": "Description: Finds a configuration based on an ID inside the \nrequest object.",
+            "itemtype": "method",
+            "name": "findById",
+            "params": [
+                {
+                    "name": "req",
+                    "description": "A request object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "res",
+                    "description": "A response object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Returns a HTTP response with the wanted configuration.",
+                "type": "Object"
+            },
+            "class": "Operations"
+        },
+        {
+            "file": "routes\\Operations.js",
+            "line": 109,
+            "description": "Description: Find all the configurations saved.",
+            "itemtype": "method",
+            "name": "findAll",
+            "params": [
+                {
+                    "name": "req",
+                    "description": "A request object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "res",
+                    "description": "A response object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Returns a HTTP response with all the saved configuration\nin the data base.",
+                "type": "Object"
+            },
+            "class": "Operations"
+        },
+        {
+            "file": "routes\\Operations.js",
+            "line": 129,
+            "description": "Description: Update a configuration based on the ID inside the\nrequest object.",
+            "itemtype": "method",
+            "name": "updateConfig",
+            "params": [
+                {
+                    "name": "req",
+                    "description": "A request object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "res",
+                    "description": "A response object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Returns a HTTP response with the updated configuration.",
+                "type": "Object"
+            },
+            "class": "Operations"
+        },
+        {
+            "file": "routes\\Operations.js",
+            "line": 155,
+            "description": "Description: Check syntax in the component object given.",
+            "itemtype": "method",
+            "name": "checkSyntax",
+            "params": [
+                {
+                    "name": "component",
+                    "description": "A component object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Returns true if no error were found.",
+                "type": "Boolean"
+            },
+            "class": "Operations"
+        },
+        {
+            "file": "Server.js",
+            "line": 18,
+            "description": "Description: HTTP GET method to obtain all the configurations\nsaved in the data base.",
+            "itemtype": "method",
+            "name": "GET Method",
+            "return": {
+                "description": "Returns a JSON structure containing all the \nconfigurations saved in the data base.",
+                "type": "Object"
+            },
+            "class": "Server"
+        },
+        {
+            "file": "Server.js",
+            "line": 28,
+            "description": "Description: HTTP GET method to obtain a configuration by an ID given.",
+            "itemtype": "method",
+            "name": "GET Method",
+            "params": [
+                {
+                    "name": "ID",
+                    "description": "The ID of the configuration required.",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns a JSON structure containing the\nconfiguration with the ID given.",
+                "type": "Object"
+            },
+            "class": "Server"
+        },
+        {
+            "file": "Server.js",
+            "line": 38,
+            "description": "Description: HTTP POST method to save a configuration.",
+            "itemtype": "method",
+            "name": "POST Method",
+            "return": {
+                "description": "Returns a JSON structure containing the saved\nconfiguration.",
+                "type": "Object"
+            },
+            "class": "Server"
+        },
+        {
+            "file": "Server.js",
+            "line": 47,
+            "description": "Description: HTTP PUT method to update a configuration by an ID given.",
+            "itemtype": "method",
+            "name": "PUT Method",
+            "params": [
+                {
+                    "name": "ID",
+                    "description": "The ID of the configuration that needs to be updated.",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns a JSON structure containing the updated\nconfiguration.",
+                "type": "Object"
+            },
+            "class": "Server"
+        },
+        {
+            "file": "Server.js",
+            "line": 57,
+            "itemtype": "property",
+            "name": "Port",
+            "default": "3000",
+            "type": "Number",
+            "class": "Server"
+        }
+    ],
+    "warnings": []
+}
