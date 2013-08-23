@@ -1,18 +1,50 @@
+/**
+Provides functionality to the dashboard.
+@module Dashboard
+**/
+
+/**
+* Description: This class contains the pull down menu functionality.
+*
+* @class pull
+*/
+
+/**
+* Indicated the frequency of time used to look for recent configurations
+* created.
+*
+* @attribute refreshInterval
+* @default 10000 ms.
+* @type number
+*/
+var refreshInterval;
+
+/**
+* Description: Executes the pull functionality with the frequency established 
+* in the "refreshInterval" attribute when the index page is loaded.
+*
+* @method ready
+*/
 $(document).ready(function(){
 	pull();
-	setInterval(function(){ 
+	refreshInterval = setInterval(function(){ 
 		pull();  
 	}, 10000);
 });
 
 
+/**
+* Description: Executes the REST service to get recent configurations created and then send them
+* to the Dashboard page.
+*
+* @method pull
+*/
 function pull(){
 	$.ajax({
 	    type: 'GET',
 	    crossDomain: true,
 	    dataType: 'text json',
 	    url: 'http://localhost:3000/dashboard/pull',
-	    
 	    success: function(data) {
 	    	$('div#newSubPanel').attr('id', 'subPanel');
 	    	for (var index = 0; index < data.length; index++){
@@ -28,9 +60,12 @@ function pull(){
 	    	$("div#newSubPanel").slideDown("slow");
 	    	$("div#pull").children().slice(10).detach();
         },
-        
         error: function (xhr, status, error) {
-        	$("div#pull").prepend("Connection error.");          
+        	$("div#pull").prepend("<div id='newSubPanel'> <p> Connection error. <br> Wait a moment and try again by reloading the page.</p></div>");
+        	$("div#newSubPanel").hide();
+	    	$("div#newSubPanel").slideDown("slow");
+	    	$("div#pull").children().slice(10).detach();
+        	clearInterval(refreshInterval);
         }
 	});
 }

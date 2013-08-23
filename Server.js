@@ -1,20 +1,18 @@
 /**
 Provides operations to manage configurations.
-
 @module REST Services
 **/
 
 /**
-* Description: This class receives the HTTP requests to operations like save, 
-* update and find configurations.
+* Description: This class creates a server using expressjs.
 *
 * @class Server
 */
 
 var express = require('express'),
 	mongoose = require('mongoose'),
-    operation = require('./REST/Operations'),
-	dashboard = require('./REST/Dashboard');
+	schemaManagement = require('./REST/schemaManagement'),
+	mapReduceOperations = require('./REST/mapReduceOperations');
  
 var app = express();
  
@@ -23,8 +21,6 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
 
-
- 
 /**
 * Description: HTTP GET method to obtain all the configurations
 * saved in the data base.
@@ -33,9 +29,7 @@ app.configure(function () {
 * @return {Object} Returns a JSON structure containing all the 
 * configurations saved in the data base.
 */
-app.get('/config', operation.findAll);
-
-
+app.get('/config', schemaManagement.findAll);
 
 /**
 * Description: HTTP GET method to obtain a configuration by an ID given.
@@ -45,9 +39,7 @@ app.get('/config', operation.findAll);
 * @return {Object} Returns a JSON structure containing the
 * configuration with the ID given.
 */
-app.get('/config/:id', operation.findById);
-
-
+app.get('/config/:id', schemaManagement.findById);
 
 /**
 * Description: HTTP POST method to save a configuration.
@@ -56,9 +48,7 @@ app.get('/config/:id', operation.findById);
 * @return {Object} Returns a JSON structure containing the saved
 * configuration.
 */
-app.post('/config', operation.addConfig);
-
-
+app.post('/config', schemaManagement.addConfig);
 
 /**
 * Description: HTTP PUT method to update a configuration by an ID given.
@@ -68,9 +58,7 @@ app.post('/config', operation.addConfig);
 * @return {Object} Returns a JSON structure containing the updated
 * configuration.
 */
-app.put('/config/:id', operation.updateConfig);
-
-
+app.put('/config/:id', schemaManagement.updateConfig);
 
 /**
 * Description: HTTP GET method to get the number of appearances of a skuID given.
@@ -80,9 +68,7 @@ app.put('/config/:id', operation.updateConfig);
 * @return {Number} Returns the number of appearances of the skuId.
 * configuration.
 */
-app.get('/dashboard/skuID/:skuId', dashboard.getAppearances);
-
-
+app.get('/dashboard/skuID/:skuId', mapReduceOperations.getAppearances);
 
 /**
 * Description: HTTP GET method to get the top number of main components or
@@ -95,8 +81,7 @@ app.get('/dashboard/skuID/:skuId', dashboard.getAppearances);
 * @return {Object} Returns the component's top N in the database that matches the configuration
 *  type and the component type.
 */
-app.get('/dashboard/top/:N/:configType/:componentType', dashboard.getTopN);
-
+app.get('/dashboard/top/:N/:configType/:componentType', mapReduceOperations.getTopN);
 
 /**
 * Description: HTTP GET method to get the top number of all components.
@@ -107,17 +92,25 @@ app.get('/dashboard/top/:N/:configType/:componentType', dashboard.getTopN);
 * @return {Object} Returns the component's top N in the database that matches the configuration
 * type.
 */
-app.get('/dashboard/top/:N/:configType', dashboard.getTopN);
+app.get('/dashboard/top/:N/:configType', mapReduceOperations.getTopN);
 
-app.get('/dashboard/pull', operation.pull);
+/**
+* Description: HTTP GET method to get recent configurations added.
+*
+* @method GET Method
+* @return {Object} Returns an array with the last configurations created.
+* type.
+*/
+app.get('/dashboard/pull', schemaManagement.pull);
 
-
-
+/**
+* Description:Configuration to enter directories with the expressjs server.
+*
+* @method configure Method
+*/
 app.configure(function () {
     app.use("/", express.static(__dirname));
 });
-
-
 
 /**
 @property Port

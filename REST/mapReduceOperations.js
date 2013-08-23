@@ -1,11 +1,15 @@
 /**
-* Description: This class contains some methods used by the server class.
+Provides operations to manage configurations.
+@module REST Services
+**/
+
+/**
+* Description: This class contains methods using mongoDB's mapReduce functionality.
 *
-* @class Dashboard
+* @class mapReduceOperations
 */
 
 var mongoose = require("mongoose");
-
 
 /**
 * Description: Get the number of appearances of a skuID given.
@@ -15,7 +19,6 @@ var mongoose = require("mongoose");
 * @return {object} Returns an object with the skuID and the number of appearances.
 */
 exports.getAppearances = function(req, res) {
-	
 	var skuIdMap = function() {   
 		function aux(component){
 			if (s === component.skuId){
@@ -27,7 +30,6 @@ exports.getAppearances = function(req, res) {
 				}
 			}
 		}
-		
 		if (s === this.items[0].skuId){
 			emit(this.items[0].skuId, 1);
 		}
@@ -36,7 +38,6 @@ exports.getAppearances = function(req, res) {
 			 aux(this.items[0].components[index]);
 		 }
 	}; 
-
 	var skuIdReduce = function(previous, current) { 
 		var count = 0; 
 		for (index in current) { 
@@ -44,7 +45,6 @@ exports.getAppearances = function(req, res) {
 		} 
 		return count; 
 	}; 
-
 	var command = { 
 		mapreduce: "config",
 	    map: skuIdMap.toString(),
@@ -52,7 +52,6 @@ exports.getAppearances = function(req, res) {
 	    scope : { s : req.params.skuId },
 	    out: 'skuId'
 	}; 
-
 	mongoose.connection.db.executeDbCommand(command, function(err, dbres) 
 	{ 
 		if (err) { res.send('An error has occurred \n', 409); } 
@@ -71,7 +70,6 @@ exports.getAppearances = function(req, res) {
 		}
 	});
 };
-
 
 /**
 * Description: Get component's top N by a configuration type (and a component type).
@@ -92,7 +90,6 @@ exports.getTopN = function(req, res) {
 				}
 			}
 		}
-		
 		if (!c){
 			emit(this.items[0].skuId, 1);
 			
@@ -111,7 +108,6 @@ exports.getTopN = function(req, res) {
 			}
 		}
 	};
-
 	var topReduce = function(previous, current) { 
 		var count = 0; 
 		for (index in current) { 
@@ -119,7 +115,6 @@ exports.getTopN = function(req, res) {
 		} 
 		return count; 
 	}; 
-
 	var command = { 
 		mapreduce: "config",
 	    map: topMap.toString(),
@@ -128,7 +123,6 @@ exports.getTopN = function(req, res) {
 	    scope : { c : req.params.componentType },
 	    out: 'skuId'
 	}; 
-
 	mongoose.connection.db.executeDbCommand(command, function(err, dbres) 
 	{ 
 		if (err) { res.send('An error has occurred \n', 409); } 

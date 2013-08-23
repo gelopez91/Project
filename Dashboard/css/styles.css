@@ -1,6 +1,6 @@
 body {
 	margin: 0px;
-	background: url(top_bg.gif);
+	background: url(../images/top_bg.gif);
 	background-repeat: repeat-x;
 	font-family: Verdana, Arial, sans-serif;
     font-size: .6em;
@@ -23,7 +23,7 @@ ul {
 	font-size: 10px;
 	margin:0;
 	padding:0;
-	list-style-image: url(bullet.gif);
+	list-style-image: url(../images/bullet.gif);
 }
 
 a {
@@ -58,7 +58,7 @@ blockquote{
 	width: 100%;
 	height: 88px;
 	color: #fff;
-	background: #000 url(top_bg.gif);
+	background: #000 url(../images/top_bg.gif);
 	overflow:hidden;
 }
 
@@ -72,7 +72,7 @@ blockquote{
 	top:33px;
 	display:block;
 	float:left;
-	background: url(logo.jpg) no-repeat;
+	background: url(../images/logo.jpg) no-repeat;
 	padding-left: 40px;
 }
 

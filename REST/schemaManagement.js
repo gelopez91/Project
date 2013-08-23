@@ -1,32 +1,50 @@
 /**
-* Description: This class contains some methods used by the server class.
+Provides operations to manage configurations.
+@module REST Services
+**/
+
+/**
+* Description: This class contains methods using the mongoose schemas defined.
 *
-* @class Operations
+* @class schemaManagement
 */
 
 var mongoose = require("mongoose");
  
 var Schema = mongoose.Schema;
 
-var configComp = mongoose.Schema();
-configComp.add(
+/**
+* Defines the schema for a configuration's subcomponent.
+*
+* @attribute subComponentSchema
+* @type mongoose schema
+*/
+var subComponentSchema = mongoose.Schema();
+subComponentSchema.add(
 	{ _id:false,
 	  commerceItemType: 'string',
 	  buildCategoryId: 'string',
 	  skuId: 'string',
 	  quantity: 'Number',
 	  productId: 'string',
-	  components: [configComp]
+	  components: [subComponentSchema]
 	});
 
-var configMain = mongoose.Schema(
+/**
+* Defines the schema for a configuration. It is used to manage the 
+* "config" collection in MongoDB.
+*
+* @attribute configurationSchema
+* @type mongoose schema
+*/
+var configurationSchema = mongoose.Schema(
 	    { items: [{
 	    	  _id:false,
 	          commerceItemType: 'string',
 	          skuId: 'string',
 	          quantity: 'Number',
 	          productId: 'string',
-	          components: [configComp]
+	          components: [subComponentSchema]
 	      }],
 	      buildTypeId: 'string',
 	      type: 'string',
@@ -35,14 +53,21 @@ var configMain = mongoose.Schema(
 	      updatedAt: 'Date'
 	    }, {versionKey: false});
 
-var configMainAux = mongoose.Schema(
+/**
+* Defines the schema for a configuration. It is used to manage the 
+* "pull" collection in mongoDB.
+*
+* @attribute configurationSchemaII
+* @type mongoose schema
+*/
+var configurationSchemaII = mongoose.Schema(
 	    { items: [{
 	    	  _id:false,
 	          commerceItemType: 'string',
 	          skuId: 'string',
 	          quantity: 'Number',
 	          productId: 'string',
-	          components: [configComp]
+	          components: [subComponentSchema]
 	      }],
 	      buildTypeId: 'string',
 	      type: 'string',
@@ -53,9 +78,8 @@ var configMainAux = mongoose.Schema(
 	    }, {versionKey: false, 
 	    	capped: { max: 10, size: 1000000 }});
 
-var configuration = mongoose.model('configuration', configMain, 'config');
-var configuration2 = mongoose.model('configuration2', configMainAux, 'pool');
-
+var configuration = mongoose.model('configuration', configurationSchema, 'config');
+var configuration2 = mongoose.model('configuration2', configurationSchemaII, 'pull');
 
 /**
 * Description: Adds a configuration given inside the request object.
@@ -111,7 +135,6 @@ exports.addConfig = function(req, res) {
     }
 };
 
-
 /**
 * Description: Finds a configuration based on an ID inside the 
 * request object.
@@ -124,7 +147,6 @@ exports.addConfig = function(req, res) {
 exports.findById = function(req, res) {
 	configuration.findById(req.params.id, function (err, item) {
 		if (!(item == null)){
-    		console.log('Success... \n');
     		res.send(item, 200);
     	} else {
     		res.send(404);
@@ -145,7 +167,6 @@ exports.findById = function(req, res) {
 exports.findAll = function(req, res) {
 	configuration.find(function (err, items) {
 	    if (!err) {
-	    	console.log('Success... \n');
             res.send(items, 200);
 	    } else {
 	    	res.send(404);
@@ -191,7 +212,6 @@ exports.updateConfig = function(req, res) {
  					item.updatedAt = new Date();;
  					item.save(function(err, c){
  						if (!(c == null)){
- 				    		console.log('Success... \n');
  				    		res.send(c, 200);
  				    	} else {
  				    		res.send(404);
@@ -230,6 +250,13 @@ function checkSyntax(component){
 	}
 }
 
+
+/**
+* Description: This method gets recent configurations added.
+*
+* @method pull
+* @return {Object} Returns an array with the last configurations created.
+*/
 exports.pull = function(req, res) {
 	configuration2.find(function (err, result) {
 	    if (!err) {
