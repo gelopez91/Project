@@ -1,4 +1,10 @@
 /**
+Provides operations to manage configurations.
+
+@module REST Services
+**/
+
+/**
 * Description: This class receives the HTTP requests to operations like save, 
 * update and find configurations.
 *
@@ -7,8 +13,8 @@
 
 var express = require('express'),
 	mongoose = require('mongoose'),
-    operation = require('./routes/Operations'),
-	dashboard = require('./routes/Dashboard');
+    operation = require('./REST/Operations'),
+	dashboard = require('./REST/Dashboard');
  
 var app = express();
  
@@ -74,7 +80,7 @@ app.put('/config/:id', operation.updateConfig);
 * @return {Number} Returns the number of appearances of the skuId.
 * configuration.
 */
-app.get('/config/skuID/:skuId', dashboard.getAppearances);
+app.get('/dashboard/skuID/:skuId', dashboard.getAppearances);
 
 
 
@@ -89,13 +95,8 @@ app.get('/config/skuID/:skuId', dashboard.getAppearances);
 * @return {Object} Returns the component's top N in the database that matches the configuration
 *  type and the component type.
 */
-app.get('/config/top/:N/:configType/:componentType', dashboard.getTopN);
+app.get('/dashboard/top/:N/:configType/:componentType', dashboard.getTopN);
 
-/**
-Provides operations to manage configurations.
-
-@module REST Services
-**/
 
 /**
 * Description: HTTP GET method to get the top number of all components.
@@ -106,7 +107,15 @@ Provides operations to manage configurations.
 * @return {Object} Returns the component's top N in the database that matches the configuration
 * type.
 */
-app.get('/config/top/:N/:configType', dashboard.getTopN);
+app.get('/dashboard/top/:N/:configType', dashboard.getTopN);
+
+app.get('/dashboard/pull', operation.pull);
+
+
+
+app.configure(function () {
+    app.use("/", express.static(__dirname));
+});
 
 
 
@@ -124,3 +133,7 @@ console.log('Listening on port 3000...');
 @type Object
 **/
 mongoose.connect('mongodb://localhost/configdb');
+
+mongoose.connection.on('error', function (err) {
+	 console.log("Cannot connect to database.");	 
+});

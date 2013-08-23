@@ -7,8 +7,6 @@
 var mongoose = require("mongoose");
  
 var Schema = mongoose.Schema;
- 
-// Schemas
 
 var configComp = mongoose.Schema();
 configComp.add(
@@ -33,10 +31,30 @@ var configMain = mongoose.Schema(
 	      buildTypeId: 'string',
 	      type: 'string',
 	      buildGroupId: 'string',
-	      savedAt: 'Date'
+	      savedAt: 'Date',
+	      updatedAt: 'Date'
 	    }, {versionKey: false});
 
-var configuration = mongoose.model('configurations', configMain, 'config');
+var configMainAux = mongoose.Schema(
+	    { items: [{
+	    	  _id:false,
+	          commerceItemType: 'string',
+	          skuId: 'string',
+	          quantity: 'Number',
+	          productId: 'string',
+	          components: [configComp]
+	      }],
+	      buildTypeId: 'string',
+	      type: 'string',
+	      buildGroupId: 'string',
+	      savedAt: 'Date',
+	      updatedAt: 'Date',
+	      originalId: 'string'
+	    }, {versionKey: false, 
+	    	capped: { max: 10, size: 1000000 }});
+
+var configuration = mongoose.model('configuration', configMain, 'config');
+var configuration2 = mongoose.model('configuration2', configMainAux, 'pool');
 
 
 /**
@@ -49,11 +67,16 @@ var configuration = mongoose.model('configurations', configMain, 'config');
 */
 exports.addConfig = function(req, res) {
 	var config = new configuration(req.body);
+	var config2 = new configuration2(req.body);
 	if((config.items.length == 0) || !config.buildTypeId || !config.type || 
-			 !config.buildGroupId || !config.savedAt){
+			 !config.buildGroupId || !config.savedAt || !config.updatedAt){
     	console.log('Error in config. keys. \n');
     	res.send('Syntax error', 400);
     } else {
+    	config.savedAt = new Date();
+    	config.updatedAt = new Date();
+    	config2.savedAt = new Date();
+    	config2.updatedAt = new Date();
     	if(!config.items[0].commerceItemType || !config.items[0].skuId || 
     	    	   !config.items[0].quantity || !config.items[0].productId){
         	console.log('Error in main component. \n');
@@ -67,12 +90,17 @@ exports.addConfig = function(req, res) {
  				else { break; }
  			}
  			if (flag){
- 				config.save(function(err, result){
+ 				config.save(function(err, result1){
  					if (err) {
  			        	console.log(err);
  			            res.send('An error has occurred \n', 409);
  			        } else { 		
- 			            res.send(result, 200);
+ 			        	config2.originalId = result1._id+"";
+ 			        	config2.save(function(err, result2){
+ 		 					if (!err) {
+ 		 						res.send(result1, 200);
+ 		 					}
+ 		 				});
  			        }
  				});
  			} else {
@@ -160,7 +188,7 @@ exports.updateConfig = function(req, res) {
  					item.buildTypeId = config.buildTypeId;
  					item.type = config.type;
  					item.buildGroupId = config.buildGroupId;
- 					item.savedAt = config.savedAt;
+ 					item.updatedAt = new Date();;
  					item.save(function(err, c){
  						if (!(c == null)){
  				    		console.log('Success... \n');
@@ -201,3 +229,18 @@ function checkSyntax(component){
 		else { return false; }
 	}
 }
+
+exports.pull = function(req, res) {
+	configuration2.find(function (err, result) {
+	    if (!err) {
+	    	var pull = new Array();
+	    	for (var index = 0; index<result.length; index++){
+	    		pull [index] = {SKUID: result[index].items[0].skuId, 
+	    						ID: result[index].originalId };
+	    	}
+	    	res.send(pull, 200);
+	    } else {
+	    	res.send(404);
+	    }
+	});
+};
