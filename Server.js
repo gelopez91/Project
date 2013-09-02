@@ -61,6 +61,15 @@ app.post('/config', schemaManagement.addConfig);
 app.put('/config/:id', schemaManagement.updateConfig);
 
 /**
+* Description: HTTP GET method to get recent configurations added.
+*
+* @method GET Method
+* @return {Object} Returns an array with the last configurations created.
+* type.
+*/
+app.get('/dashboard/pull', schemaManagement.pull);
+
+/**
 * Description: HTTP GET method to get the number of appearances of a skuID given.
 *
 * @method GET Method
@@ -94,14 +103,16 @@ app.get('/dashboard/top/:N/:configType/:componentType', mapReduceOperations.getT
 */
 app.get('/dashboard/top/:N/:configType', mapReduceOperations.getTopN);
 
+
 /**
-* Description: HTTP GET method to get recent configurations added.
+* Description: HTTP GET method to get the configurations created in a range of dates.
 *
-* @method GET Method
-* @return {Object} Returns an array with the last configurations created.
-* type.
+* @method GET Method 
+* @param {Date} dateIni The date to start looking.
+* @param {Date} dateEnd The end date of the range.
+* @return {Object} Returns all the configurations created in the range of dates.
 */
-app.get('/dashboard/pull', schemaManagement.pull);
+app.get('/dashboard/dates/:dateIni/:dateEnd', mapReduceOperations.getByDate);
 
 /**
 * Description:Configuration to enter directories with the expressjs server.

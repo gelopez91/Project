@@ -6,7 +6,7 @@ Provides functionality to the dashboard.
 /**
 * Description: This class contains the pull down menu functionality.
 *
-* @class pull
+* @class rightBar
 */
 
 /**

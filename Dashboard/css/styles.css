@@ -1,3 +1,6 @@
+
+/* Body */
+
 body {
 	margin: 0px;
 	background: url(../images/top_bg.gif);
@@ -43,7 +46,6 @@ blockquote{
 
 /**** Main Container ***/
 
-
 #wrap {
        margin-left: auto;
        margin-right: auto;
@@ -52,7 +54,6 @@ blockquote{
 
 
 /**** Top ***/
-
 
 #top {
 	width: 100%;
@@ -87,7 +88,6 @@ blockquote{
 
 
 /**** Main Menu ***/
-
 
 #menu {
 	display: block;
@@ -130,8 +130,8 @@ blockquote{
 
 /**** Content Container ***/
 
-
 #content {
+	min-width:1100px;
 	width: 100%;
 	margin-top:30px;
 }
@@ -144,27 +144,91 @@ blockquote{
 
 /**** Content ***/
 
-
-#left ul {
+#center ul {
 	padding: 15px 0 15px 35px;
 	margin:0;
 }
 
-#left li {
+#center li {
 	margin-bottom:5px;
 }
 
-#left {
-	width: 350px;
-	float:left;
-	display: block;
-        margin-left: 20px;
-	display: inline;
+#center {
+	margin-left: 320px;
+    width: 500px;
 }
 
 
-/**** Sidebar ***/
+/**** Sidebars ***/
 
+#left {
+	width: 320px;
+	float: left;
+	display:block;
+	margin-top: 10px;
+}
+
+#left h2 {
+	font-size: 1.1em;
+	margin: 0px 0 0px 0;
+	padding:0px 0 5px 0;
+	font-size: 16px;
+	float:left;
+}
+
+#left fieldset {
+	border: none;
+	border-bottom: dotted 1px gray;
+}
+
+#left .box {
+	width: 310px;
+	background: #F6F9FB;
+	border: 1px solid #E1E1E1;
+	float: left;
+	height: 725px;
+}
+
+#left .box p {
+	margin: 5px 0 15px 0;
+	line-height: 15px;
+	font-size: 15px;
+	float: left;
+}
+
+#left .box input {
+	margin: 5px 0 10px 0;
+	line-height: 15px;
+	font-size: 13px;
+	float:right;
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+#left .sub-box {
+	width: 310px;
+	background: #F6F9FB;
+	float: left;
+	height: 600px;
+    overflow: auto;
+}
+
+#left .sub-box div {
+	width: 280px;
+	height: 60px;
+	padding:5px 4px 5.5px 5px;
+	background: #F6F9FB;
+	border-bottom: dotted 1px gray;
+}
+
+#left .sub-box p {
+	margin: 5px 0 15px 0;
+	line-height: 15px;
+	font-size: 15px;
+	float: left;
+}
 
 #right {
 	width: 300px;
@@ -178,14 +242,14 @@ blockquote{
 	margin: 0px 0 0px 0;
 	padding:0px 0 5px 0;
 	font-size: 16px;
-	float:right;
+	float:left;
 }
 
 #right .box {
 	width: 290px;
 	background: #F6F9FB;
 	border: 1px solid #E1E1E1;
-	float: right;
+	float: left;
 	height: 725px;
 }
 
@@ -205,7 +269,6 @@ blockquote{
 
 /**** Clear Div ***/
 
-
 #clear {
 	display: block;
 	clear: both;
@@ -217,9 +280,8 @@ blockquote{
 
 /**** Footer ***/
 
-
 #footer {
-        margin: 40px auto 0 auto;
+    margin: 40px auto 0 auto;
 	text-align: center;
 	border-top: dotted 1px gray;
 	padding: 20px 0 20px 0;

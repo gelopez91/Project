@@ -141,3 +141,26 @@ exports.getTopN = function(req, res) {
 		}
 	});
 };
+
+/**
+* Description: Get components created in a range of dates.
+*
+* @method getByDate
+* @param {Date} dateIni The date to start looking.
+* @param {Date} dateEnd The end date of the range.
+* @return {object} Returns the components created in the range of dates.
+*/
+exports.getByDate = function(req, res){
+	var dateIni = new Date(req.params.dateIni);
+	var dateEnd = new Date(req.params.dateEnd);
+	mongoose.connection.db.collection('config', function(err, collection) {
+        collection.find({"savedAt": {"$gte": dateIni, "$lt": dateEnd}}).toArray(function(err, resp) {
+        	if (!err){
+        		res.send(resp, 200);
+        	}
+        	else {
+        		res.send(404);
+        	}
+        });
+	});
+};

@@ -1,12 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Dashboard</title>
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="./css/styles.css" media="screen" />
+	<title>Dashboard</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="./css/styles.css" media="screen" />
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script type="text/javascript" src="dateTimePicker-Addon.js"></script>
+	<script src="rightBar.js"></script>
+	<script src="leftBar.js"></script>
 </head>
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="pull.js"></script>
+
 <body>
 <div id="wrap">
   <div id="top">
@@ -18,14 +24,30 @@
     </div>
   </div>
   <div id="content">
-    <div id="left">
-      <h2>Info.</h2>
-      <p>Some info...</p>
-      
-    </div>
+  	<div id="left">
+      <h2>Search by date</h2>
+      <div class="box">
+      	<form name="search">
+      		<fieldset>
+		      	<p> First Date: </p>
+		      	<input type="text" name="dateIni" id="dateIni" value="" required/>
+		      	<p> Second Date: </p>
+		      	<input type="text" name="dateEnd" id="dateEnd" value="" required/>
+		      	<input type="button" value="Search" onClick="return loadConfigurationsByDate()"/>
+	      	</fieldset>
+      	</form>
+      	<div class="sub-box" id="results">
+      	
+      	</div>	
+      </div>
+    </div>    
     <div id="right">
       <h2>Recent Configurations</h2>
       <div class="box" id="pull"></div>
+    </div>
+    <div id="center">
+      	<h2>Info.</h2>
+      	<p>Some info...</p>  
     </div>
     <div id="clear"></div>
   </div>
