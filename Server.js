@@ -115,6 +115,18 @@ app.get('/dashboard/top/:N/:configType', mapReduceOperations.getTopN);
 app.get('/dashboard/dates/:dateIni/:dateEnd', mapReduceOperations.getByDate);
 
 /**
+* Description: HTTP GET method to get a range of configurations created in a range of dates.
+*
+* @method GET Method 
+* @param {Date} dateIni The date to start looking.
+* @param {Date} dateEnd The end date of the range.
+* @param {Number} ini The number to start getting configurations.
+* @param {Number} end The number to stop getting configurations.
+* @return {Object} Returns all the configurations created in the range of dates.
+*/
+app.get('/dashboard/dates/:dateIni/:dateEnd/:ini/:end', mapReduceOperations.getByDate);
+
+/**
 * Description:Configuration to enter directories with the expressjs server.
 *
 * @method configure Method

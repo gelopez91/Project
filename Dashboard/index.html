@@ -3,14 +3,16 @@
 <head>
 	<title>Dashboard</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="./css/styles.css" media="screen" />
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	<script type="text/javascript" src="dateTimePicker-Addon.js"></script>
+	<script type="text/javascript" src="./plugins/dateTimePicker-Addon.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script src="center.js"></script>
 	<script src="rightBar.js"></script>
 	<script src="leftBar.js"></script>
+	<script src="chart1.js"></script>
 </head>
 
 <body>
@@ -24,6 +26,7 @@
     </div>
   </div>
   <div id="content">
+  
   	<div id="left">
       <h2>Search by date</h2>
       <div class="box">
@@ -33,26 +36,52 @@
 		      	<input type="text" name="dateIni" id="dateIni" value="" required/>
 		      	<p> Second Date: </p>
 		      	<input type="text" name="dateEnd" id="dateEnd" value="" required/>
-		      	<input type="button" value="Search" onClick="return loadConfigurationsByDate()"/>
+				<dd>
+		      	<input type="button" class="button" value="Search" onClick="return loadConfigurationsByDate()"/>
+		      	</dd>
 	      	</fieldset>
       	</form>
-      	<div class="sub-box" id="results">
-      	
-      	</div>	
+      	<div class="sub-box" id="results"></div>	
       </div>
-    </div>    
+    </div> 
+    
+    <div id="center">
+		<div class='mainTab' id='tabs'>
+		    <ul>
+		        <li class='liTab'><a href='#tab1'>Charts</a></li>
+		        <li class='liTab'><a href='#tab2'>Configuration Details</a></li>
+		    </ul>
+		    <div class='tab' id='tab1'>
+		    	<center>
+		    	<p> Rango a mostrar: </p>
+		    	<select id='range'>
+		    		<option value="15">15 Minutos</option>
+				  	<option value="30">30 Minutos</option>
+				  	<option value="60">1 hora</option>
+				  	<option value="120">2 Horas</option>
+				</select>
+				</center>
+		    	<div id="chart1"></div>
+		    
+		    </div>
+		    <div class='tab' id='tab2'>
+		    
+		    
+		    
+		    </div>
+		</div> 	
+    </div>
+       
     <div id="right">
       <h2>Recent Configurations</h2>
       <div class="box" id="pull"></div>
     </div>
-    <div id="center">
-      	<h2>Info.</h2>
-      	<p>Some info...</p>  
-    </div>
+    
     <div id="clear"></div>
   </div>
+  
   <div id="footer">
-    <p><a href="http://backcountry.com">Backcountry.com</a></p>
+    <p><a href="http://www.backcountry.com">Backcountry.com</a></p>
   </div>
 </div>
 </body>

@@ -153,14 +153,31 @@ exports.getTopN = function(req, res) {
 exports.getByDate = function(req, res){
 	var dateIni = new Date(req.params.dateIni);
 	var dateEnd = new Date(req.params.dateEnd);
-	mongoose.connection.db.collection('config', function(err, collection) {
-        collection.find({"savedAt": {"$gte": dateIni, "$lt": dateEnd}}).toArray(function(err, resp) {
-        	if (!err){
-        		res.send(resp, 200);
-        	}
-        	else {
-        		res.send(404);
-        	}
-        });
-	});
+	if (!req.params.ini && !req.params.end){
+		mongoose.connection.db.collection('config', function(err, collection) {
+	        collection.find({"savedAt": {"$gte": dateIni, "$lt": dateEnd}}).toArray(function(err, resp) {
+	        	if (!err){
+	        		res.send(resp, 200);
+	        	}
+	        	else {
+	        		res.send(404);
+	        	}
+	        });
+		});
+	}
+	else {
+		var ini = parseInt(req.params.ini);
+		var end = parseInt(req.params.end); 
+		mongoose.connection.db.collection('config', function(err, collection) {
+	        collection.find({"savedAt": {"$gte": dateIni, "$lt": dateEnd}}).skip(ini).limit(end).toArray(
+	        function(err, resp) {
+	        	if (!err){
+	        		res.send(resp, 200);
+	        	}
+	        	else {
+	        		res.send(404);
+	        	}
+	        });
+		});
+	}
 };

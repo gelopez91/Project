@@ -50,8 +50,9 @@ function pull(){
 	    	for (var index = 0; index < data.length; index++){
 	    		$('div#pull').each(function () {
 	    			if (!$('div#pull').children(':contains('+ data[index].ID +')').length) {
-	    				$("div#pull").prepend("<div id='newSubPanel'> <p> Sku: " + data[index].SKUID +"<br><br>" +
-	    									  "ID: "+ data[index].ID + "</p></div>");
+	    				$("div#pull").prepend("<div class='subPanel' id='newSubPanel'> <p> Sku: " + 
+	    										data[index].SKUID +"</p>" +
+	    									  "<p> ID: "+ data[index].ID + "</p></div>");
 	    	    	}
 
 	    	    });
@@ -59,6 +60,15 @@ function pull(){
 	    	$("div#newSubPanel").hide();
 	    	$("div#newSubPanel").slideDown("slow");
 	    	$("div#pull").children().slice(10).detach();
+	    	$(".subPanel").on({
+	    		click: function(){
+	    			var content = $(this).text();
+	    			var n=content.indexOf("ID:");
+	    			var id = content.substring(n+4);
+	    			getConfigById(id);	
+	    		}
+	    	});
+		   	
         },
         error: function (xhr, status, error) {
         	$("div#pull").prepend("<div id='newSubPanel'> <p> Connection error. <br> Wait a moment and try again by reloading the page.</p></div>");
