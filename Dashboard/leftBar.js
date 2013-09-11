@@ -4,7 +4,7 @@ Provides functionality to the dashboard.
 **/
 
 /**
-* Description: This class contains the pull down menu functionality.
+* Description: This class contains the search panel functionality.
 *
 * @class leftBar
 */

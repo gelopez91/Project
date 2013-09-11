@@ -1,5 +1,28 @@
+/**
+Provides functionality to the dashboard.
+@module Dashboard
+**/
+
+/**
+* Description: Create a chart showing recent configurations created.
+*
+* @class chart1
+*/
+
+/**
+* Indicated the interval of time in the chart.
+*
+* @attribute interval
+* @default 15 min.
+* @type number
+*/
 var interval=15;
 
+/**
+* Description: Draw the chart for the first time.
+*
+* @method ready
+*/
 $(document).ready(function(){	
 	$("#range").change(function() {
 	    interval = parseInt(this.value);
@@ -8,9 +31,13 @@ $(document).ready(function(){
 });
 
 google.load("visualization", "1", {packages:["corechart"]});
-
 google.setOnLoadCallback(drawChart);
 
+/**
+* Description: Draw the chart for recent configurations created.
+*
+* @method drawChart
+*/
 function drawChart() {
 	var date = new Date(), 		
 		arr=[];
@@ -51,6 +78,13 @@ function drawChart() {
     chart.draw(data, options);
 }
 
+/**
+* Description: Create the AJAX requests to get configurations created in a range of time
+* and then return the number of configurations created. 
+*
+* @method count
+* @param {Object} time An array with the hour and minutes for the consult.
+*/
 function count(time){
 	var date = new Date(),
 		response = 0;

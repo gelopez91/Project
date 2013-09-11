@@ -1,7 +1,29 @@
+/**
+Provides functionality to the dashboard.
+@module Dashboard
+**/
+
+/**
+* Description: This class contains the center panel functionality
+*
+* @class centers
+*/
+
+/**
+* Description: Create the tab functionality in the center panel.
+*
+* @method ready
+*/
 $(document).ready(function(){
 	$( "div#tabs" ).tabs();
 });
 
+/**
+* Description: Get a configuration by an ID given.
+*
+* @method getConfigById
+* @param {Number} ID The ID of the configuration required.
+*/
 function getConfigById(ID){
 	$.ajax({
 	    type: 'GET',
@@ -33,6 +55,12 @@ function getConfigById(ID){
 	});
 }
 
+/**
+* Description: Add each component information in the configuration to the tab panel.
+*
+* @method displayComponents
+* @param {Object} components The array of components in the configuration.
+*/
 function displayComponents (components) {
     if (components.length == 0){
         return 'none';
@@ -53,6 +81,12 @@ function displayComponents (components) {
     }
 }
 
+/**
+* Description: Add each component information in the configuration to the tab panel.
+*
+* @method parseJsonAsHTMLTree
+* @param {Object} jsn The JSON structure with the complete configuration.
+*/
 var parseJsonAsHTMLTree = function (jsn) {
     var result = '';
     result += '<ul id="detail"><li> ID: ' + jsn._id + '</li>';
