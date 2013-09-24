@@ -83,7 +83,7 @@ blockquote{
 }
 
 #top h2 a:hover {
-        color: #73B45D;
+    color: #73B45D;
 }
 
 
@@ -145,8 +145,8 @@ blockquote{
 /**** Content ***/
 
 #center {
-    min-width:895px;
-	width: 60%;
+    min-width:982.5px;
+	width: 65.5%;
     height: 760px;
     margin-top:10px;
     float: left;
@@ -155,14 +155,14 @@ blockquote{
 #center .mainTab {
 	margin-left: auto;
     margin-right: auto;
-	width: 98.5%;
+	width: 99%;
 	height: 100%;
 }
 
 #center .tab {
 	margin-left: auto;
     margin-right: auto;
-	width: 95%;
+	width: 97%;
 	height: 695px;
 	overflow:auto;
 }
@@ -190,7 +190,7 @@ blockquote{
 	margin-bottom:5px;
 }
 
-#center a {
+#center .aTab {
 	width:173px;
 	text-align: center;
 }
@@ -231,12 +231,26 @@ blockquote{
 	list-style-image: url(../images/minus.png);
 }
 
+.ui-menu { width: 150px; }
+
+#chartsMenu {
+	margin-top: 50px;
+	float: left;
+}
+
+#chartByTime {
+	float: left;
+}
+
+#chartByRange {
+	float: left;
+}
 
 /**** Sidebars ***/
 
 #left {
-	min-width:300px;
-	width: 19%;
+	min-width:255px;
+	width: 17%;
 	float: left;
 	display:block;
 	margin-top: 10px;
@@ -355,7 +369,7 @@ blockquote{
 }
 
 #left .sub-box div {
-	min-width:255px;
+	min-width:210px;
 	width: 95.5%;
 	height: 55px;
 	padding:5px 4px 5px 5px;
@@ -390,8 +404,8 @@ blockquote{
 }
 
 #right {
-	min-width:300px;
-	width: 20%;
+	min-width:255px;
+	width: 17%;
 	float: left;
 	display:block;
 	margin-top: 10px;
@@ -458,9 +472,9 @@ blockquote{
 }
 
 #right .box div {
-	min-width:285px;
+	min-width:240px;
 	width: 96%;
-	padding:5px 4px 5px 8px;
+	padding:5px 4px 5px 4px;
 	background: #F6F9FB;
 	border: 1px solid #E1E1E1;
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;

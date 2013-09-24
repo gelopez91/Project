@@ -10,12 +10,14 @@ Provides functionality to the dashboard.
 */
 
 /**
-* Description: Create the tab functionality in the center panel.
+* Description: Create the tab and menu functionality in the center panel.
 *
 * @method ready
 */
 $(document).ready(function(){
 	$( "div#tabs" ).tabs();
+	$( "#navMenu" ).menu();
+	showChart1();
 });
 
 /**
@@ -108,3 +110,15 @@ var parseJsonAsHTMLTree = function (jsn) {
 
     return result;
 };
+
+function showChart1(){
+	$('#chartByRange').addClass('hidden').css({ 'display' : 'none' });
+	$('#chartByTime').removeClass('hidden').css({ 'display' : 'block' }).fadeIn();
+}
+
+function showChart2(){
+	$('#chartByTime').addClass('hidden').css({ 'display' : 'none' });
+	$('#chartByRange').removeClass('hidden').css({ 'display' : 'block' }).fadeIn();
+}
+
+

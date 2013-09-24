@@ -24,7 +24,8 @@ $(document).ready(function(){
     });
     
     $('.sub-box').scroll( function() {
-    	if ($(this)[0].scrollHeight - $(this).scrollTop() === $(this).outerHeight()) {
+    	if($(this).scrollTop() + $(this).innerHeight()>=$(this)[0].scrollHeight)
+        {
     		ini = ini + 20;
     		aux(dateIni, dateEnd, ini);
     	}
@@ -86,36 +87,31 @@ function aux(dateIni, dateEnd, ini){
 	    dataType: 'text json',
 	    url: 'http://localhost:3000/dashboard/dates/'+dateIni+'/'+dateEnd+'/'+ini+'/20',
 	    success: function(data) {
-	    	if (data.length === 0){
-	    		$("div#results").append("<div class='subPanel2' 'id='subPanel2'> <p> No configurations found. </p></div>");
+	    	for (var index = 0; index < data.length; index++){
+	    		if (index < 7){
+	    			$("div#results").append("<div class='subPanel2' 'id='subPanel2'> <p> Sku: " + data[index].items[0].skuId +
+	    									"</p><br/> <p>ID: "+ data[index]._id + "</p></div>");
+	    		}
+	    		else {
+	    			$("div#results").append("<div class='subPanel2 hidden' 'id='subPanel2'> <p> Sku: " + data[index].items[0].skuId +
+	    									"</p><br/> <p> ID: "+ data[index]._id + "</p></div>");
+	    		}
 	    	}
-	    	else {
-	    		for (var index = 0; index < data.length; index++){
-		    		if (index < 8){
-		    			$("div#results").append("<div class='subPanel2' 'id='subPanel2'> <p> Sku: " + data[index].items[0].skuId +
-		    									"</p><br/> <p>ID: "+ data[index]._id + "</p></div>");
-		    		}
-		    		else {
-		    			$("div#results").append("<div class='subPanel2 hidden' 'id='subPanel2'> <p> Sku: " + data[index].items[0].skuId +
-		    									"</p><br/> <p> ID: "+ data[index]._id + "</p></div>");
-		    		}
-		    	}
-		    	$('.sub-box').on('scroll', function(){
-		    	    $('.hidden').each(function(){
-		    	        if(checkScroll($(this))){
-		    	            $(this).removeClass('hidden').css({ 'display' : 'none' }).fadeIn();
-		    	        }
-		    	    });
-		    	});
-		    	$(".subPanel2").on({
-		    		click: function(){
-		    			var content = $(this).text();
-		    			var n=content.indexOf("ID:");
-		    			var id = content.substring(n+4);
-		    			getConfigById(id);	 
-		    		}
-		    	});
-	    	}
+	    	$('.sub-box').on('scroll', function(){
+	    	    $(".subPanel2.hidden").each(function(){
+	    	        if(checkScroll($(this))){
+	    	            $(this).removeClass('hidden').css({ 'display' : 'none' }).fadeIn();
+	    	        }
+	    	    });
+	    	});
+	    	$(".subPanel2").on({
+	    		click: function(){
+	    			var content = $(this).text();
+	    			var n=content.indexOf("ID:");
+	    			var id = content.substring(n+4);
+	    			getConfigById(id);	 
+	    		}
+	    	});
         },
         error: function (xhr, status, error) {
         	$("div#results").append("<div class='subPanel2' id='subPanel2'> <p> An error occured.</p></div>");

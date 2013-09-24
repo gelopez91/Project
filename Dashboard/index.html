@@ -13,6 +13,7 @@
 	<script src="rightBar.js"></script>
 	<script src="leftBar.js"></script>
 	<script src="chart1.js"></script>
+	<script src="chart2.js"></script>
 </head>
 
 <body>
@@ -48,26 +49,35 @@
     <div id="center">
 		<div class='mainTab' id='tabs'>
 		    <ul>
-		        <li class='liTab'><a href='#tab1'>Charts</a></li>
-		        <li class='liTab'><a href='#tab2'>Configuration Details</a></li>
+		        <li class='liTab'><a class='aTab' href='#tab1'>Charts</a></li>
+		        <li class='liTab'><a class='aTab' href='#tab2'>Configuration Details</a></li>
 		    </ul>
 		    <div class='tab' id='tab1'>
-		    	<center>
-		    	<p> Rango a mostrar: </p>
-		    	<select id='range'>
-		    		<option value="15">15 Minutos</option>
-				  	<option value="30">30 Minutos</option>
-				  	<option value="60">1 hora</option>
-				  	<option value="120">2 Horas</option>
-				</select>
-				</center>
-		    	<div id="chart1"></div>
-		    
+		    	<div id='chartsMenu'>
+		    		<ul id="navMenu">
+					  <li><a href="javascript:showChart1()">Chart #1</a></li>
+					  <li><a href="javascript:showChart2()">Chart #2</a></li>
+					</ul>
+		    	</div>
+				<div class="chart" id='chartByTime'>
+			    	<center>
+			    	<p> Interval time: </p>
+			    	<select id='range'>
+			    		<option value="15">15 Minutes</option>
+					  	<option value="30">30 Minutes</option>
+					  	<option value="60">1 Hour</option>
+					  	<option value="120">2 Hours</option>
+					  	<option value="360">6 Hours</option>
+					</select>
+					</center>
+			    	<div id="chart1"></div>
+		    	</div>
+		    	<div class="chart" id="chartByRange">
+		    		<div id="chart2"></div>
+		    	</div>
 		    </div>
+		    
 		    <div class='tab' id='tab2'>
-		    
-		    
-		    
 		    </div>
 		</div> 	
     </div>

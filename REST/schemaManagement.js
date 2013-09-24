@@ -53,33 +53,7 @@ var configurationSchema = mongoose.Schema(
 	      updatedAt: 'Date'
 	    }, {versionKey: false});
 
-/**
-* Defines the schema for a configuration. It is used to manage the 
-* "pull" collection in mongoDB.
-*
-* @attribute configurationSchemaII
-* @type mongoose schema
-*/
-var configurationSchemaII = mongoose.Schema(
-	    { items: [{
-	    	  _id:false,
-	          commerceItemType: 'string',
-	          skuId: 'string',
-	          quantity: 'Number',
-	          productId: 'string',
-	          components: [subComponentSchema]
-	      }],
-	      buildTypeId: 'string',
-	      type: 'string',
-	      buildGroupId: 'string',
-	      savedAt: 'Date',
-	      updatedAt: 'Date',
-	      originalId: 'string'
-	    }, {versionKey: false, 
-	    	capped: { max: 10, size: 1000000 }});
-
 var configuration = mongoose.model('configuration', configurationSchema, 'config');
-var configuration2 = mongoose.model('configuration2', configurationSchemaII, 'pull');
 
 /**
 * Description: Adds a configuration given inside the request object.
@@ -91,7 +65,6 @@ var configuration2 = mongoose.model('configuration2', configurationSchemaII, 'pu
 */
 exports.addConfig = function(req, res) {
 	var config = new configuration(req.body);
-	var config2 = new configuration2(req.body);
 	if((config.items.length == 0) || !config.buildTypeId || !config.type || 
 			 !config.buildGroupId || !config.savedAt || !config.updatedAt){
     	console.log('Error in config. keys. \n');
@@ -99,8 +72,6 @@ exports.addConfig = function(req, res) {
     } else {
     	config.savedAt = new Date();
     	config.updatedAt = new Date();
-    	config2.savedAt = new Date();
-    	config2.updatedAt = new Date();
     	if(!config.items[0].commerceItemType || !config.items[0].skuId || 
     	    	   !config.items[0].quantity || !config.items[0].productId){
         	console.log('Error in main component. \n');
@@ -119,12 +90,7 @@ exports.addConfig = function(req, res) {
  			        	console.log(err);
  			            res.send('An error has occurred \n', 409);
  			        } else { 		
- 			        	config2.originalId = result1._id+"";
- 			        	config2.save(function(err, result2){
- 		 					if (!err) {
- 		 						res.send(result1, 200);
- 		 					}
- 		 				});
+ 			        	res.send(result1, 200);
  			        }
  				});
  			} else {
@@ -258,12 +224,13 @@ function checkSyntax(component){
 * @return {Object} Returns an array with the last configurations created.
 */
 exports.pull = function(req, res) {
-	configuration2.find(function (err, result) {
+	var pullFind = configuration.find().sort({savedAt: -1}).limit(10);
+	pullFind.execFind(function (err, result) {
 	    if (!err) {
 	    	var pull = new Array();
 	    	for (var index = 0; index<result.length; index++){
 	    		pull [index] = {SKUID: result[index].items[0].skuId, 
-	    						ID: result[index].originalId };
+	    						ID: result[index]._id };
 	    	}
 	    	res.send(pull, 200);
 	    } else {

@@ -24,59 +24,91 @@ var interval=15;
 * @method ready
 */
 $(document).ready(function(){	
+	startChart();
 	$("#range").change(function() {
 	    interval = parseInt(this.value);
-	    drawChart();
+	    startChart();
 	});
 });
-
-google.load("visualization", "1", {packages:["corechart"]});
-google.setOnLoadCallback(drawChart);
 
 /**
 * Description: Draw the chart for recent configurations created.
 *
-* @method drawChart
+* @method startChart
 */
-function drawChart() {
-	var date = new Date(), 		
+function startChart(){
+	google.load('visualization', '1', { packages: ['corechart'], callback: function() {
+		var date = new Date(), 		
 		arr=[];
 	
-	minutes = date.getMinutes()+'';
-	if (minutes.length < 2){ minutes = '0'+minutes;}
-	arr.push([date.getHours() + ':' + minutes, date.getHours(), date.getMinutes()]);
-	for(var i=0;i<9;i++){
-	  date.setMinutes(date.getMinutes() - interval);
-	  minutes = date.getMinutes()+'';
-	  if (minutes.length < 2){ minutes = '0'+minutes;}
-	  arr.push([date.getHours() + ':' + minutes, date.getHours(), date.getMinutes()]);
-	}
+		minutes = date.getMinutes()+'';
+		if (minutes.length < 2){ minutes = '0'+minutes;}
+		arr.push(date.getHours() + ':' + minutes);
+		for(var i=0;i<9;i++){
+		  date.setMinutes(date.getMinutes() - interval);
+		  minutes = date.getMinutes()+'';
+		  if (minutes.length < 2){ minutes = '0'+minutes;}
+		  arr.push(date.getHours() + ':' + minutes);
+		}
+		
+		var data = new google.visualization.DataTable();
+			data.addColumn('string', '');
+	        data.addColumn('number', 'Configurations');
+	        data.addRows(10);
+	        for (var i=9, j=0; i>=0; i--, j++){
+		        data.setValue(j, 0, arr[i]);
+	        }
+	        
+	        for (var i=0; i<10; i++){
+		        data.setValue(i, 1, 0);
+	        }
+	        
+	        var chartData = count();
+
+	        var totalMax = Math.max.apply(null, chartData);
+	        var totalMin = Math.min.apply(null, chartData);;
+	        
+	        var roundingExp = Math.floor(Math.log(totalMax) / Math.LN10);
+	        var roundingDec = Math.pow(10,roundingExp);
+
+	        var newMax = Math.ceil(totalMax/roundingDec)*roundingDec;
+	        var newMin = Math.floor(totalMin/roundingDec)*roundingDec;
+
+	        var range = newMax - newMin;
+	        var gridLines = 5;
+	        for (var i = 2; i <= 5; ++i) {
+	            if ( Math.round(range/i) === range/i) {
+	                gridLines = i;
+	            }
+	        } 
+	        
+	        var options = {
+	            title: 'Recent configurations created',
+	            width: '825',
+	            height: '500',
+	            hAxis: {title: 'Time of day'},
+	            vAxis: {title: 'Quantity', format: '#', viewWindow: {min:0}, gridlines:{count: gridLines}},
+	            animation:{
+	                duration: 450,
+	                easing: 'out'
+	            }
+	        };
+	        var chart = new google.visualization.LineChart(document.getElementById('chart1'));
+	        var index = 0;
+	        var drawChart = function() {
+	        	if (index < chartData.length) {
+	        		data.setValue(index, 1, chartData[index++]);
+	                chart.draw(data, options);
+	        	}
+	        };
 	
-	var data = google.visualization.arrayToDataTable([
-    	  ['Date Time', 'configurations'],
-          [arr[9][0],  count(arr[9])],
-          [arr[8][0],  count(arr[8])],
-          [arr[7][0],  count(arr[7])],
-    	  [arr[6][0],  count(arr[6])],
-    	  [arr[5][0],  count(arr[5])],
-    	  [arr[4][0],  count(arr[4])],
-    	  [arr[3][0],  count(arr[3])],
-    	  [arr[2][0],  count(arr[2])],
-    	  [arr[1][0],  count(arr[1])],
-    	  [arr[0][0],  count(arr[0])]
-        ]);
-
-    var options = {
-          title: 'Recent configurations created' ,
-          hAxis: {title: 'Time of day'},
-          vAxis: {title: 'Quantity', format: '#', showTextEvery:1},
-          width: '850',
-          height: '500'
-    };
-
-    var chart = new google.visualization.LineChart(document.getElementById('chart1'));
-    chart.draw(data, options);
+	        google.visualization.events.addListener(chart, 'animationfinish', drawChart);
+	        chart.draw(data, options);
+	        drawChart();
+		}
+	});
 }
+
 
 /**
 * Description: Create the AJAX requests to get configurations created in a range of time
@@ -86,55 +118,12 @@ function drawChart() {
 * @param {Object} time An array with the hour and minutes for the consult.
 */
 function count(time){
-	var date = new Date(),
-		response = 0;
-	
-	if (time[1] > date.getHours()){
-		date.setMinutes(date.getMinutes() - 1440);
-		dFin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time[1], time[2]);
-		tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time[1], time[2]);
-		tempDate.setMinutes(tempDate.getMinutes() - interval);
-		dIni = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate(), tempDate.getHours(), tempDate.getMinutes());
-		
-		var hours24 = dIni.getHours(),
-			hours = ((hours24 + 11) % 12) + 1,
-			amPm = hours24 > 11 ? 'pm' : 'am';
-		
-		var hours24II = dFin.getHours(),
-			hoursII = ((hours24II + 11) % 12) + 1,
-			amPmII = hours24 > 11 ? 'pm' : 'am';
-		
-		dateI = ("00" + (dIni.getMonth() + 1)).slice(-2) + "-" + 
-			    ("00" + dIni.getDate()).slice(-2) + "-" + 
-			    dIni.getFullYear() + " " + 
-			    ("00" + hours).slice(-2) + ":" + 
-			    ("00" + dIni.getMinutes()).slice(-2) +" " + amPm;
-		dateF = ("00" + (dFin.getMonth() + 1)).slice(-2) + "-" + 
-			    ("00" + dFin.getDate()).slice(-2) + "-" + 
-			    dFin.getFullYear() + " " + 
-			    ("00" + hoursII).slice(-2) + ":" + 
-			    ("00" + dFin.getMinutes()).slice(-2) +" " + amPmII;
-		
-		$.ajax({
-			async: false,
-			type: 'GET',
-		    crossDomain: true,
-		    dataType: 'text json',
-		    url: 'http://localhost:3000/dashboard/dates/'+dateIni+'/'+dateEnd+'/',
-		    success: function(data) {
-		    	response = data.length; 
-	        },
-	        error: function (xhr, status, error) {
-	        	response = 0;
-	        }
-		});
-		return response;
-	}
-	else {
-		dFin = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time[1], time[2]);
-		tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time[1], time[2]);
-		tempDate.setMinutes(tempDate.getMinutes() - interval);
-		dIni = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate(), tempDate.getHours(), tempDate.getMinutes());
+	var response = [],
+		dIni = new Date(),
+		dFin = new Date();
+			
+	for (var i=9; i>=0; i--){
+		dIni.setMinutes(dIni.getMinutes() - interval);
 		
 		var hours24 = dIni.getHours(),
 		hours = ((hours24 + 11) % 12) + 1,
@@ -142,7 +131,7 @@ function count(time){
 		
 		var hours24II = dFin.getHours(),
 		hoursII = ((hours24II + 11) % 12) + 1,
-		amPmII = hours24 > 11 ? 'pm' : 'am';
+		amPmII = hours24II > 11 ? 'pm' : 'am';
 		
 		dateI = ("00" + (dIni.getMonth() + 1)).slice(-2) + "-" + 
 			    ("00" + dIni.getDate()).slice(-2) + "-" + 
@@ -162,12 +151,13 @@ function count(time){
 		    dataType: 'text json',
 		    url: 'http://localhost:3000/dashboard/dates/'+dateI+'/'+dateF,
 		    success: function(data) {
-		    	response = data.length; 
+		    	response[i] = data.length; 
 	        },
 	        error: function (xhr, status, error) {
-	        	response = 0;
+	        	response[i] = 0;
 	        }
-		});
-		return response;
+		});	
+		dFin.setMinutes(dFin.getMinutes() - interval);
 	}
+	return response;
 }

@@ -47,7 +47,7 @@ function pull(){
 	    url: 'http://localhost:3000/dashboard/pull',
 	    success: function(data) {
 	    	$('div#newSubPanel').attr('id', 'subPanel');
-	    	for (var index = 0; index < data.length; index++){
+	    	for (var index = data.length-1; index >= 0; index--){
 	    		$('div#pull').each(function () {
 	    			if (!$('div#pull').children(':contains('+ data[index].ID +')').length) {
 	    				$("div#pull").prepend("<div class='subPanel' id='newSubPanel'> <p> Sku: " + 
@@ -68,7 +68,6 @@ function pull(){
 	    			getConfigById(id);	
 	    		}
 	    	});
-		   	
         },
         error: function (xhr, status, error) {
         	$("div#pull").prepend("<div id='newSubPanel'> <p> Connection error. <br> Wait a moment and try again by reloading the page.</p></div>");
